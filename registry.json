@@ -3,6 +3,44 @@
     {
       "exact": true,
       "from": {
+        "id": "nix-registry",
+        "type": "indirect"
+      },
+      "to": {
+        "owner": "c4f3z1n",
+        "repo": "nix-registry",
+        "type": "github"
+      }
+    },
+    {
+      "exact": true,
+      "from": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      },
+      "to": {
+        "owner": "nixos",
+        "ref": "nixos-23.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    {
+      "exact": true,
+      "from": {
+        "id": "home-manager",
+        "type": "indirect"
+      },
+      "to": {
+        "owner": "nix-community",
+        "ref": "release-23.11",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    {
+      "exact": true,
+      "from": {
         "id": "devshell",
         "type": "indirect"
       },
@@ -63,21 +101,6 @@
     {
       "exact": true,
       "from": {
-        "id": "home-manager",
-        "type": "indirect"
-      },
-      "to": {
-        "lastModified": 1710888565,
-        "narHash": "sha256-s9Hi4RHhc6yut4EcYD50sZWRDKsugBJHSbON8KFwoTw=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "f33900124c23c4eca5831b9b5eb32ea5894375ce",
-        "type": "github"
-      }
-    },
-    {
-      "exact": true,
-      "from": {
         "id": "impermanence",
         "type": "indirect"
       },
@@ -102,21 +125,6 @@
         "owner": "nixos",
         "repo": "nixos-hardware",
         "rev": "7559df1e4af972d5f1de87975b5ef6a8d7559db2",
-        "type": "github"
-      }
-    },
-    {
-      "exact": true,
-      "from": {
-        "id": "nixpkgs",
-        "type": "indirect"
-      },
-      "to": {
-        "lastModified": 1711124224,
-        "narHash": "sha256-l0zlN/3CiodvWDtfBOVxeTwYSRz93muVbXWSpaMjXxM=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "56528ee42526794d413d6f244648aaee4a7b56c0",
         "type": "github"
       }
     },
