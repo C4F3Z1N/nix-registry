@@ -32,6 +32,6 @@ jobs:
           signoff: false
           branch: flake-update
           delete-branch: true
-          title: Updated flake.lock
+          title: Updated registry
           assignees: ${{ github.actor }}
           draft: false
