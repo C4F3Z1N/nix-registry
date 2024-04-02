@@ -18,7 +18,6 @@ jobs:
       - run: |
           nix build --no-write-lock-file
           cp -fv result registry.json
-					nix fmt --no-write-lock-file
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
