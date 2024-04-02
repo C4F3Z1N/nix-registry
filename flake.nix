@@ -57,7 +57,8 @@
         };
 
       perSystem = { pkgs, ... }: {
-        packages.default = pkgs.writeText "registry.json" (builtins.toJSON self.final);
+        packages.default =
+          pkgs.writeText "registry.json" (builtins.toJSON self.final);
 
         treefmt.config = {
           projectRootFile = "flake.nix";
