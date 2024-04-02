@@ -2,7 +2,6 @@
   description = "My custom registry";
 
   inputs = {
-    nix-registry.url = "flake:nix-registry";
     nixpkgs.url = "flake:nixpkgs";
 
     home-manager = {
