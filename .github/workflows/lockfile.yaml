@@ -28,7 +28,7 @@ jobs:
             echo 'PR_BODY<<EOF'
             git log -1 --pretty=%B
             echo EOF
-          } | tee -a "$GITHUB_ENV"
+          } | tee -a "$GITHUB_OUTPUT"
       - uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
