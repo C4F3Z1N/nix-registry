@@ -2,68 +2,70 @@
   description = "My custom registry";
 
   inputs = {
-    nixpkgs.url = "flake:nixpkgs";
+    # safely pinned to a ref (branch/tag);
+    home-manager.url = "github:nix-community/home-manager/release-23.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
 
-    home-manager = {
-      url = "flake:home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
+    # tracking main, master, latest, etc.;
+    devshell.url = "github:numtide/devshell";
+    disko.url = "github:nix-community/disko";
     flake-compat.url = "github:edolstra/flake-compat";
+    flake-parts.url = "github:hercules-ci/flake-parts";
     impermanence.url = "github:nix-community/impermanence";
     nixos-hardware.url = "github:nixos/nixos-hardware";
+    sops-nix.url = "github:mic92/sops-nix";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
 
-    devshell = {
-      url = "github:numtide/devshell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    flake-parts = {
-      url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs-lib.follows = "nixpkgs";
-    };
-
-    sops-nix = {
-      url = "github:mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.nixpkgs-stable.follows = "nixpkgs";
-    };
-
-    treefmt-nix = {
-      url = "github:numtide/treefmt-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # recursive inputs deduplication;
+    devshell.inputs.nixpkgs.follows = "nixpkgs";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
+    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix.inputs.nixpkgs-stable.follows = "nixpkgs";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-parts, treefmt-nix, ... }:
+  outputs = inputs@{ nixpkgs, flake-parts, treefmt-nix, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [ treefmt-nix.flakeModule ];
 
-      flake = { lib, ... }:
-        let
-          lockFromInputs = flake@{ from, to, ... }:
-            flake // lib.optionalAttrs (to ? narHash) {
-              to = to // lib.getAttrs [ "lastModified" "narHash" "rev" ]
-                inputs."${from.id}".sourceInfo;
-            };
-        in rec {
-          prev = lib.importJSON ./registry.json;
-          final = prev // { flakes = map lockFromInputs prev.flakes; };
+      perSystem = { lib, pkgs, self', ... }: {
+        apps.default = {
+          type = "app";
+          program = pkgs.writeShellApplication {
+            name = "jq-${self'.packages.default.name}";
+            runtimeInputs = [ pkgs.jq ];
+            text = "jq '.' ${self'.packages.default}";
+          };
         };
 
-      perSystem = { pkgs, ... }: {
-        packages.default =
-          pkgs.writeText "registry.json" (builtins.toJSON self.final);
+        packages.default = with lib.importJSON ./flake.lock;
+          lib.pipe nodes [
+            (lib.filterAttrs (id: { flake ? id != "root", ... }: flake))
+            (lib.mapAttrs (id:
+              { original, locked, ... }: {
+                exact = true;
+                from = {
+                  inherit id;
+                  type = "indirect";
+                };
+                to = if original ? ref then original else locked;
+              }))
+            (lib.attrValues)
+            (flakes: {
+              inherit flakes;
+              version = 2;
+            })
+            (builtins.toJSON)
+            (pkgs.writeText "registry.json")
+          ];
 
         treefmt.config = {
-          projectRootFile = "flake.nix";
           programs.nixfmt.enable = true;
           programs.prettier.enable = true;
+          projectRootFile = "flake.nix";
+          settings.formatter.prettier.includes = [ "*.lock" ];
         };
       };
 
