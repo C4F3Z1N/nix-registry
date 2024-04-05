@@ -24,7 +24,8 @@ jobs:
           nix fmt flake.lock
           git add flake.lock
           git commit --amend --no-edit
-          printf "PR_BODY=%s\n" "$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+          git log -1 --pretty=%B
+          printf "PR_BODY=%s\n" "$(git log -1 --pretty=%B)" | tee -a $GITHUB_OUTPUT
       - uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
