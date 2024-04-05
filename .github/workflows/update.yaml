@@ -31,7 +31,6 @@ jobs:
       - uses: peter-evans/create-pull-request@v6
         with:
           title: ${{ steps.date.outputs.TODAY }}
-          body: ${{ steps.update.outputs.PR_BODY }}
           branch: ${{ steps.date.outputs.TODAY }}
           delete-branch: true
           draft: false
