@@ -1,11 +1,12 @@
-name: Test action
+name: Update flake.lock
+
 on:
   schedule:
     - cron: "0 0 * * 0,3" # every Sunday and Wednesday at 00:00;
   workflow_dispatch:
 
 jobs:
-  update:
+  lockfile:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -14,19 +15,17 @@ jobs:
           extra_nix_config: |
             experimental-features = flakes nix-command
             nix-path = nixpkgs=github:nixos/nixpkgs/nixos-23.11-small
-      - run: |
-          nix flake update --refresh
-          nix fmt
-      - run: |
+      - name: Update flake.lock
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          nix flake update --commit-lock-file
+          nix fmt flake.lock
           git add flake.lock
-          git restore .
-          git commit -m "Test action"
+          git commit --amend --no-edit
       - uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
-          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           signoff: false
           branch: flake-update
           delete-branch: true
