@@ -15,7 +15,8 @@ jobs:
           extra_nix_config: |
             experimental-features = flakes nix-command
             nix-path = nixpkgs=github:nixos/nixpkgs/nixos-23.11-small
-      - name: Update flake.lock
+      - id: update
+        name: Update flake.lock
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -23,12 +24,13 @@ jobs:
           nix fmt flake.lock
           git add flake.lock
           git commit --amend --no-edit
+          printf "PR_BODY=%s" "$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
       - uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
-          signoff: false
           branch: flake-update
           delete-branch: true
           title: Test action
+          body: ${{ steps.update.outputs.PR_BODY }}
           assignees: ${{ github.actor }}
           draft: false
