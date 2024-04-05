@@ -15,11 +15,13 @@ jobs:
           extra_nix_config: |
             experimental-features = flakes nix-command
             nix-path = nixpkgs=github:nixos/nixpkgs/nixos-23.11-small
-      - id: update
-        name: Update flake.lock
+      - name: Setup git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - id: update
+        name: Update flake.lock
+        run: |
           nix flake update --commit-lock-file
           nix fmt flake.lock
           git add flake.lock
@@ -28,13 +30,14 @@ jobs:
             echo 'PR_BODY<<EOF'
             git log -1 --pretty=%B
             echo EOF
-          } | tee -a "$GITHUB_OUTPUT"
+          } | tee -a $GITHUB_OUTPUT
+      - id: date
+        run: printf "TODAY=%s\n" "$(date '+%Y-%m-%d')" | tee -a $GITHUB_OUTPUT
       - uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
-          branch: flake-update
-          delete-branch: true
-          title: Test action
+          title: ${{ steps.date.outputs.TODAY }}
           body: ${{ steps.update.outputs.PR_BODY }}
-          assignees: ${{ github.actor }}
+          branch: ${{ steps.date.outputs.TODAY }}
+          delete-branch: true
           draft: false
+          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
