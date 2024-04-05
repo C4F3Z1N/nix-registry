@@ -1,8 +1,8 @@
-name: Update registry
+name: Test action
 on:
   schedule:
-    - cron: "0 0 * * 0" # runs weekly on Sunday at 00:00
-  workflow_dispatch: # allows manual triggering
+    - cron: "0 0 * * 0,3" # every Sunday and Wednesday at 00:00;
+  workflow_dispatch:
 
 jobs:
   update:
@@ -13,25 +13,23 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = flakes nix-command
-            flake-registry = ${{ github.workspace }}/registry.json
-            nix-path = nixpkgs=flake:nixpkgs
+            nix-path = nixpkgs=github:nixos/nixpkgs/nixos-23.11-small
       - run: |
-          nix build --no-write-lock-file
-          cp -fv result registry.json
-          nix fmt --no-write-lock-file
+          nix flake update --refresh
+          nix build
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add registry.json
+          git add registry.json result
           git restore .
-          git commit -m "Updated registry"
+          git commit -m "Test action"
       - uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
-          # author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
           signoff: false
           branch: flake-update
           delete-branch: true
-          title: Updated registry
+          title: Test action
           assignees: ${{ github.actor }}
           draft: false
