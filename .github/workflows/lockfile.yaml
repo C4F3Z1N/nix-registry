@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  lockfile:
+  update:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,7 +15,7 @@ jobs:
           extra_nix_config: |
             experimental-features = flakes nix-command
             nix-path = nixpkgs=github:nixos/nixpkgs/nixos-23.11-small
-      - name: Setup git
+      - name: Setup git user
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -26,11 +26,6 @@ jobs:
           nix fmt flake.lock
           git add flake.lock
           git commit --amend --no-edit
-          {
-            echo 'PR_BODY<<EOF'
-            git log -1 --pretty=%B
-            echo EOF
-          } | tee -a $GITHUB_OUTPUT
       - id: date
         run: printf "TODAY=%s\n" "$(date '+%Y-%m-%d')" | tee -a $GITHUB_OUTPUT
       - uses: peter-evans/create-pull-request@v6
