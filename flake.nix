@@ -34,7 +34,7 @@
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [ treefmt-nix.flakeModule ];
 
-      perSystem = { lib, pkgs, self', ... }: {
+      perSystem = { pkgs, self', ... }: {
         apps.default = {
           type = "app";
           program = pkgs.writeShellApplication {
@@ -44,26 +44,7 @@
           };
         };
 
-        packages.default = with lib.importJSON ./flake.lock;
-          lib.pipe nodes [
-            (lib.filterAttrs (id: { flake ? id != "root", ... }: flake))
-            (lib.mapAttrs (id:
-              { original, locked, ... }: {
-                exact = true;
-                from = {
-                  inherit id;
-                  type = "indirect";
-                };
-                to = if original ? ref then original else locked;
-              }))
-            (lib.attrValues)
-            (flakes: {
-              inherit flakes;
-              version = 2;
-            })
-            (builtins.toJSON)
-            (pkgs.writeText "registry.json")
-          ];
+        packages.default = import ./default.nix { inherit pkgs; };
 
         treefmt.config = {
           programs.nixfmt.enable = true;
