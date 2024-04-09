@@ -14,6 +14,7 @@
     impermanence.url = "github:nix-community/impermanence";
     nixos-hardware.url = "github:nixos/nixos-hardware";
     sops-nix.url = "github:mic92/sops-nix";
+    systems.url = "github:nix-systems/default-linux";
     treefmt-nix.url = "github:numtide/treefmt-nix";
 
     # recursive inputs deduplication;
@@ -26,7 +27,7 @@
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ nixpkgs, flake-parts, treefmt-nix, ... }:
+  outputs = inputs@{ flake-parts, treefmt-nix, systems, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [ treefmt-nix.flakeModule ];
 
@@ -69,6 +70,6 @@
         };
       };
 
-      systems = nixpkgs.lib.systems.flakeExposed;
+      systems = import systems;
     };
 }
