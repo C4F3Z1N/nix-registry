@@ -32,6 +32,5 @@ jobs:
         with:
           title: ${{ steps.date.outputs.TODAY }}
           branch: ${{ steps.date.outputs.TODAY }}
-          delete-branch: true
-          draft: false
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+          labels: automerge
