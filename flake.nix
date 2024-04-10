@@ -30,27 +30,36 @@
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs@{ flake-parts, treefmt-nix, systems, ... }:
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [ treefmt-nix.flakeModule ];
+  outputs = inputs @ {
+    flake-parts,
+    treefmt-nix,
+    systems,
+    ...
+  }:
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      imports = [treefmt-nix.flakeModule];
 
-      perSystem = { pkgs, self', ... }: {
+      perSystem = {
+        pkgs,
+        self',
+        ...
+      }: {
         apps.default = {
           type = "app";
           program = pkgs.writeShellApplication {
             name = "jq-${self'.packages.default.name}";
-            runtimeInputs = [ pkgs.jq ];
+            runtimeInputs = [pkgs.jq];
             text = "jq '.' ${self'.packages.default}";
           };
         };
 
-        packages.default = import ./default.nix { inherit pkgs; };
+        packages.default = import ./default.nix {inherit pkgs;};
 
         treefmt.config = {
-          programs.nixfmt.enable = true;
+          programs.alejandra.enable = true;
           programs.prettier.enable = true;
           projectRootFile = "flake.nix";
-          settings.formatter.prettier.includes = [ "*.lock" ];
+          settings.formatter.prettier.includes = ["*.lock"];
         };
       };
 
