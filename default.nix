@@ -4,7 +4,7 @@
 }: let
   inherit (pkgs) lib;
   lock = lib.importJSON lockFile;
-  nix-registry = {original = builtins.parseFlakeRef "github:c4f3z1n/nix-registry";};
+  nix-registry.original = builtins.parseFlakeRef "github:c4f3z1n/nix-registry";
 in
   lib.pipe (lock.nodes // {inherit nix-registry;}) [
     (lib.filterAttrs (id: {flake ? id != "root", ...}: flake))
