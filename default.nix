@@ -21,6 +21,8 @@ in
       to =
         if original ? ref
         then original
+        else if locked ? ref
+        then original // {inherit (locked) ref;}
         else locked;
     }))
     (lib.attrValues)
