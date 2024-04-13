@@ -14,7 +14,8 @@ jobs:
         with:
           extra_nix_config: |
             experimental-features = flakes nix-command
-            nix-path = nixpkgs=github:nixos/nixpkgs/nixos-23.11-small
+            flake-registry = https://github.com/c4f3z1n/nix-registry/releases/latest/download/registry.json
+            nix-path = nixpkgs=flake:nixpkgs
       - name: Setup git user
         run: |
           git config user.name "github-actions[bot]"
