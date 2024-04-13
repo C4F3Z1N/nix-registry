@@ -3,7 +3,7 @@
 repository:
   name: nix-registry
   description: My custom registry
-  topics: nix, nixos
+  topics: nix, nixos, gitops
   private: false
   has_issues: false
   has_projects: false
