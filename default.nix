@@ -22,7 +22,13 @@ in
         if original ? ref
         then original
         else if locked ? ref
-        then original // {inherit (locked) ref;}
+        then
+          builtins.removeAttrs locked [
+            "lastModified"
+            "narHash"
+            "rev"
+            "revCount"
+          ]
         else locked;
     }))
     (lib.attrValues)
