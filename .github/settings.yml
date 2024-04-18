@@ -2,7 +2,7 @@
 
 repository:
   name: nix-registry
-  description: My custom registry
+  description: Convert flake.lock to a registry file
   topics: nix, nixos, gitops
   private: false
   has_issues: false

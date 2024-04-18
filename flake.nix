@@ -1,5 +1,5 @@
 {
-  description = "My custom registry";
+  description = "Convert flake.lock to a registry file";
 
   inputs = {
     # safely pinned to a ref (branch/tag);
