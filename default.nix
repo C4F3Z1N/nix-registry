@@ -28,6 +28,7 @@ in
             "narHash"
             "rev"
             "revCount"
+            "shortRev"
           ]
         else locked;
     }))
