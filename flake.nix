@@ -3,6 +3,7 @@
 
   inputs = {
     # safely pinned to a ref (branch/tag);
+    nix.url = "github:nixos/nix/2.21.0";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
 
     # tracking main, master, latest, etc.;
@@ -25,6 +26,8 @@
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
     flake-utils.inputs.systems.follows = "systems";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nix.inputs.flake-compat.follows = "flake-compat";
+    nix.inputs.nixpkgs.follows = "nixpkgs";
     sops-nix.inputs.nixpkgs-stable.follows = "nixpkgs";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
