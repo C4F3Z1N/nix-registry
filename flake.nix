@@ -3,6 +3,7 @@
 
   inputs = {
     # safely pinned to a ref (branch/tag);
+    home-manager.url = "github:nix-community/home-manager/6ebe7be2e67be7b9b54d61ce5704f6fb466c536f";
     nix.url = "github:nixos/nix/2.21.0";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
 
@@ -12,7 +13,6 @@
     flake-compat.url = "github:edolstra/flake-compat";
     flake-parts.url = "github:hercules-ci/flake-parts";
     flake-utils.url = "github:numtide/flake-utils";
-    home-manager.url = "github:nix-community/home-manager";
     impermanence.url = "github:nix-community/impermanence";
     nixos-hardware.url = "github:nixos/nixos-hardware";
     sops-nix.url = "github:mic92/sops-nix";
