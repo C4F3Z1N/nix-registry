@@ -1,16 +1,19 @@
 {
   pkgs ? import <nixpkgs> {},
   lockFile ? ./flake.lock,
+  lib ? pkgs.lib,
 }: let
-  inherit (pkgs) lib;
-  lock = lib.importJSON lockFile;
-  nix-registry.original = builtins.parseFlakeRef "github:c4f3z1n/nix-registry";
+  inherit (lib.importJSON lockFile) nodes;
+  nix-registry = rec {
+    original = builtins.parseFlakeRef "github:c4f3z1n/nix-registry";
+    locked = original;
+  };
 in
-  lib.pipe (lock.nodes // {inherit nix-registry;}) [
+  lib.pipe (nodes // {inherit nix-registry;}) [
     (lib.filterAttrs (id: {flake ? id != "root", ...}: flake))
     (lib.mapAttrs (id: {
       original,
-      locked ? original,
+      locked,
       ...
     }: {
       exact = true;

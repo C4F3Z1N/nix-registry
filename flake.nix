@@ -52,7 +52,7 @@
           program = pkgs.writeShellApplication {
             name = "jq-${self'.packages.default.name}";
             runtimeInputs = [pkgs.jq];
-            text = "jq '.' ${self'.packages.default}";
+            text = "exec jq '.' ${self'.packages.default}";
           };
         };
 
