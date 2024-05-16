@@ -8,11 +8,9 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
 
     # tracking main, master, latest, etc.;
-    devshell.url = "github:numtide/devshell";
     disko.url = "github:nix-community/disko";
     flake-compat.url = "github:edolstra/flake-compat";
     flake-parts.url = "github:hercules-ci/flake-parts";
-    flake-utils.url = "github:numtide/flake-utils";
     impermanence.url = "github:nix-community/impermanence";
     nixos-hardware.url = "github:nixos/nixos-hardware";
     sops-nix.url = "github:mic92/sops-nix";
@@ -20,11 +18,8 @@
     treefmt-nix.url = "github:numtide/treefmt-nix";
 
     # deduplication;
-    devshell.inputs.flake-utils.follows = "flake-utils";
-    devshell.inputs.nixpkgs.follows = "nixpkgs";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
-    flake-utils.inputs.systems.follows = "systems";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix.inputs.flake-compat.follows = "flake-compat";
     nix.inputs.nixpkgs.follows = "nixpkgs";
