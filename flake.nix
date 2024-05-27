@@ -12,7 +12,6 @@
     # tracking main, master, latest, etc.;
     disko.url = "github:nix-community/disko";
     flake-compat.url = "github:edolstra/flake-compat";
-    flake-parts.url = "github:hercules-ci/flake-parts";
     impermanence.url = "github:nix-community/impermanence";
     nixos-hardware.url = "github:nixos/nixos-hardware";
     sops-nix.url = "github:mic92/sops-nix";
@@ -25,6 +24,8 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix.inputs.flake-compat.follows = "flake-compat";
     nix.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs-regression.flake = false;
+    nixpkgs-regression.follows = "nix/nixpkgs-regression";
     nixpkgs-unstable.follows = "not-nixpkgs/unstable";
     nixpkgs.follows = "not-nixpkgs/stable";
     not-nixpkgs.inputs.lib.follows = "nixpkgs";

@@ -156,6 +156,7 @@
       }
     },
     "nixpkgs-regression": {
+      "flake": false,
       "locked": {
         "lastModified": 1643052045,
         "narHash": "sha256-uGJ0VXIhWKGXxkeNnq4TvV3CIOkUJ3PAoLZ3HMzNVMw=",
@@ -223,6 +224,7 @@
         "nix": "nix",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": ["not-nixpkgs", "stable"],
+        "nixpkgs-regression": ["nix", "nixpkgs-regression"],
         "nixpkgs-unstable": ["not-nixpkgs", "unstable"],
         "not-nixpkgs": "not-nixpkgs",
         "sops-nix": "sops-nix",
