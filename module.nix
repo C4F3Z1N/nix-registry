@@ -17,7 +17,7 @@ in {
 
     override = mkOption {
       type = attrs;
-      default = { inherit (cfg) include source; };
+      default = { inherit (cfg) include source version; };
     };
 
     package = mkOption {
@@ -28,6 +28,11 @@ in {
     source = mkOption {
       type = either path attrs;
       default = ./flake.lock;
+    };
+
+    version = mkOption {
+      type = int;
+      default = 2;
     };
   };
 

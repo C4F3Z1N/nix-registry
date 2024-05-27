@@ -1,4 +1,4 @@
-{ lib, writeText, include ? { }, source ? ./flake.lock, }:
+{ lib, writeText, include ? { }, source ? ./flake.lock, version ? 2 }:
 with lib;
 let
   sanitize = entry@{ original ? { }, locked ? { }, sourceInfo ? { }, ... }:
@@ -45,10 +45,7 @@ in pipe (entries // include) [
       type = "indirect";
     };
   }))
-  (flakes: {
-    inherit flakes;
-    version = 2;
-  })
+  (flakes: { inherit flakes version; })
   (builtins.toJSON)
   (writeText "registry.json")
 ]
