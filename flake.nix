@@ -33,32 +33,23 @@
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = inputs @ {
-    flake-parts,
-    treefmt-nix,
-    systems,
-    ...
-  }:
-    flake-parts.lib.mkFlake {inherit inputs;} {
-      imports = [treefmt-nix.flakeModule];
+  outputs = inputs@{ flake-parts, systems, treefmt-nix, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      imports = [ treefmt-nix.flakeModule ];
 
       flake.nixosModules = rec {
         default = nix-registry;
         nix-registry = import ./module.nix;
       };
 
-      perSystem = {
-        self',
-        pkgs,
-        ...
-      }: {
+      perSystem = { self', pkgs, ... }: {
         apps = rec {
           default = nix-registry;
           nix-registry = {
             type = "app";
             program = pkgs.writeShellApplication {
               name = "jq-${self'.packages.nix-registry.name}";
-              runtimeInputs = [pkgs.jq];
+              runtimeInputs = [ pkgs.jq ];
               text = "exec jq '.' ${self'.packages.nix-registry}";
             };
           };
@@ -66,14 +57,14 @@
 
         packages = rec {
           default = nix-registry;
-          nix-registry = pkgs.callPackage ./package.nix {};
+          nix-registry = pkgs.callPackage ./package.nix { };
         };
 
         treefmt.config = {
-          programs.alejandra.enable = true;
+          programs.nixfmt.enable = true;
           programs.prettier.enable = true;
           projectRootFile = "flake.nix";
-          settings.formatter.prettier.includes = ["*.lock"];
+          settings.formatter.prettier.includes = [ "*.lock" ];
         };
       };
 

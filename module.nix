@@ -1,11 +1,6 @@
-{
-  config,
-  lib,
-  options,
-  pkgs,
-  ...
-}:
-with lib; let
+{ config, lib, options, pkgs, ... }:
+with lib;
+let
   cfg = config.programs.nix-registry;
   opt = options.programs.nix-registry;
 in {
@@ -17,13 +12,17 @@ in {
 
     include = mkOption {
       type = attrsOf attrs;
-      default = {};
+      default = { };
+    };
+
+    override = mkOption {
+      type = attrs;
+      default = { inherit (cfg) include source; };
     };
 
     package = mkOption {
       type = package;
-      default =
-        pkgs.callPackage ./package.nix {inherit (cfg) include source;};
+      default = pkgs.callPackage ./package.nix cfg.override;
     };
 
     source = mkOption {
@@ -33,10 +32,9 @@ in {
   };
 
   config = mkIf cfg.enable {
-    nix.settings.flake-registry =
-      cfg.package
-      // lib.optionalAttrs (cfg.package != opt.package.default) {
-        override = {inherit (cfg) include source;};
+    nix.settings.flake-registry = cfg.package
+      // optionalAttrs (cfg.package != opt.package.default) {
+        inherit (cfg) override;
       };
   };
 }
