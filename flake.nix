@@ -3,9 +3,11 @@
 
   inputs = {
     # safely pinned to a ref (branch/tag);
-    home-manager.url = "github:nix-community/home-manager/6ebe7be2e67be7b9b54d61ce5704f6fb466c536f";
-    nix.url = "github:nixos/nix/2.21.0";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
+    home-manager.url = "github:nix-community/home-manager/6ebe7be";
+    nix.url = "github:nixos/nix/2.22.0";
+
+    # handle nixpkgs variations as (sub)inputs;
+    not-nixpkgs.url = "github:c4f3z1n/not-nixpkgs";
 
     # tracking main, master, latest, etc.;
     disko.url = "github:nix-community/disko";
@@ -19,11 +21,14 @@
 
     # deduplication;
     disko.inputs.nixpkgs.follows = "nixpkgs";
-    flake-parts.inputs.nixpkgs-lib.follows = "nixpkgs";
+    flake-parts.follows = "nix/flake-parts";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     nix.inputs.flake-compat.follows = "flake-compat";
     nix.inputs.nixpkgs.follows = "nixpkgs";
-    sops-nix.inputs.nixpkgs-stable.follows = "nixpkgs";
+    nixpkgs-unstable.follows = "not-nixpkgs/unstable";
+    nixpkgs.follows = "not-nixpkgs/stable";
+    not-nixpkgs.inputs.lib.follows = "nixpkgs";
+    sops-nix.inputs.nixpkgs-stable.follows = "not-nixpkgs/stable";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
