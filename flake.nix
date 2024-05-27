@@ -42,21 +42,32 @@
     flake-parts.lib.mkFlake {inherit inputs;} {
       imports = [treefmt-nix.flakeModule];
 
+      flake.nixosModules = rec {
+        default = nix-registry;
+        nix-registry = import ./module.nix;
+      };
+
       perSystem = {
-        pkgs,
         self',
+        pkgs,
         ...
       }: {
-        apps.default = {
-          type = "app";
-          program = pkgs.writeShellApplication {
-            name = "jq-${self'.packages.default.name}";
-            runtimeInputs = [pkgs.jq];
-            text = "exec jq '.' ${self'.packages.default}";
+        apps = rec {
+          default = nix-registry;
+          nix-registry = {
+            type = "app";
+            program = pkgs.writeShellApplication {
+              name = "jq-${self'.packages.nix-registry.name}";
+              runtimeInputs = [pkgs.jq];
+              text = "exec jq '.' ${self'.packages.nix-registry}";
+            };
           };
         };
 
-        packages.default = import ./default.nix {inherit pkgs;};
+        packages = rec {
+          default = nix-registry;
+          nix-registry = pkgs.callPackage ./package.nix {};
+        };
 
         treefmt.config = {
           programs.alejandra.enable = true;
