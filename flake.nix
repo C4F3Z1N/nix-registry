@@ -3,11 +3,9 @@
 
   inputs = {
     # safely pinned to a ref (branch/tag);
-    home-manager.url = "github:nix-community/home-manager/6ebe7be";
+    home-manager.url = "github:nix-community/home-manager/release-24.05";
     nix.url = "github:nixos/nix/2.22.0";
-
-    # handle nixpkgs variations as (sub)inputs;
-    not-nixpkgs.url = "github:c4f3z1n/not-nixpkgs";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
 
     # tracking main, master, latest, etc.;
     disko.url = "github:nix-community/disko";
@@ -26,10 +24,7 @@
     nix.inputs.nixpkgs.follows = "nixpkgs";
     nixpkgs-regression.flake = false;
     nixpkgs-regression.follows = "nix/nixpkgs-regression";
-    nixpkgs-unstable.follows = "not-nixpkgs/unstable";
-    nixpkgs.follows = "not-nixpkgs/stable";
-    not-nixpkgs.inputs.lib.follows = "nixpkgs";
-    sops-nix.inputs.nixpkgs-stable.follows = "not-nixpkgs/stable";
+    sops-nix.inputs.nixpkgs-stable.follows = "nixpkgs";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     treefmt-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
