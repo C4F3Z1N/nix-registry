@@ -27,11 +27,3 @@ jobs:
           nix fmt flake.lock
           git add flake.lock
           git commit --amend --no-edit
-      - id: date
-        run: printf "TODAY=%s\n" "$(date '+%Y-%m-%d')" | tee -a $GITHUB_OUTPUT
-      - uses: peter-evans/create-pull-request@v6
-        with:
-          title: ${{ steps.date.outputs.TODAY }}
-          branch: ${{ steps.date.outputs.TODAY }}
-          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
-          labels: automerge
