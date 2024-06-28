@@ -16,12 +16,12 @@ jobs:
             experimental-features = flakes nix-command
             flake-registry = https://github.com/c4f3z1n/nix-registry/releases/latest/download/registry.json
             nix-path = nixpkgs=flake:nixpkgs
-      - name: Setup git user
+      - name: Setup git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - id: update
-        name: Update flake.lock
+        name: Update and push
         run: |
           nix flake update --commit-lock-file
           nix fmt flake.lock
