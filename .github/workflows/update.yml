@@ -10,28 +10,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: cachix/install-nix-action@v23
+      - uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: |
             experimental-features = flakes nix-command
             flake-registry = https://github.com/c4f3z1n/nix-registry/releases/latest/download/registry.json
             nix-path = nixpkgs=flake:nixpkgs
-      - name: Setup git user
+      - name: Setup git
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local push.autoSetupRemote true
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
       - id: update
-        name: Update flake.lock
+        name: Update and push
         run: |
+          git switch -c "update/$(date '+%Y-%m-%d')"
           nix flake update --commit-lock-file
           nix fmt flake.lock
           git add flake.lock
           git commit --amend --no-edit
-      - id: date
-        run: printf "TODAY=%s\n" "$(date '+%Y-%m-%d')" | tee -a $GITHUB_OUTPUT
-      - uses: peter-evans/create-pull-request@v6
-        with:
-          title: ${{ steps.date.outputs.TODAY }}
-          branch: ${{ steps.date.outputs.TODAY }}
-          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
-          labels: automerge
+          git push
