@@ -1,5 +1,5 @@
 if builtins ? getFlake then
-  builtins.getFlake (builtins.toString ./.)
+  builtins.getFlake (toString ./.)
 else
   let
     fetchNode = node@{ type, ... }:
@@ -16,4 +16,4 @@ else
 
     lock = builtins.fromJSON (builtins.readFile ./flake.lock);
     flake-compat = fetchNode lock.nodes.flake-compat.locked;
-  in (import flake-compat { src = ./.; }).defaultNix
+  in (import flake-compat { src = builtins.fetchGit ./.; }).defaultNix

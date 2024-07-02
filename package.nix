@@ -1,42 +1,33 @@
 { lib, writeText, include ? { }, source ? ./flake.lock, version ? 2 }:
-with lib;
+with builtins // lib;
 let
-  sanitize = entry@{ original ? { }, locked ? { }, sourceInfo ? { }, ... }:
-    if types.isType "flake" entry then {
-      inherit (sourceInfo) lastModified narHash;
-      type = "path";
-      path = sourceInfo.outPath;
-    } else if (original // locked) != { } then
-      if original ? ref then
-        original
-      else if locked ? ref then
-        removeAttrs locked [
-          "lastModified"
-          "narHash"
-          "rev"
-          "revCount"
-          "shortRev"
-        ]
-      else
-        locked
-    else
-      { };
-
-  entries = if (builtins.typeOf source) == "path" then
+  # detect whether the source is a lock file or an attribute set;
+  entries = if (typeOf source) == "path" then
     pipe source [
-      importJSON
+      (importJSON)
       ({ nodes, ... }:
-        builtins.mapAttrs
-        (_: path: getAttrFromPath [ (last (flatten path)) ] nodes)
+        # consider only the root inputs;
+        mapAttrs (_: path: getAttrFromPath [ (last (flatten path)) ] nodes)
         nodes.root.inputs)
       (filterAttrs (id: { flake ? id != "root", ... }: flake))
     ]
-  else if (builtins.typeOf source) == "set" then
+  else if (typeOf source) == "set" then
     source
   else
-    throw "Unsupported source type: ${builtins.typeOf source}.";
+    throw "Unsupported source type: ${typeOf source}.";
 in pipe (entries // include) [
-  (builtins.mapAttrs (_: sanitize))
+  # detect whether it's a lock entry or flake input;
+  (mapAttrs (id:
+    { locked ? null, sourceInfo ? null, ... }:
+    if !isNull locked then
+      locked
+    else if !isNull sourceInfo then {
+      inherit (sourceInfo) lastModified narHash;
+      type = "path";
+      path = sourceInfo.outPath;
+    } else
+      throw "Unsupported entry: ${id}."))
+  # create a list in the right format;
   (mapAttrsToList (id: to: {
     inherit to;
     exact = true;
@@ -46,6 +37,7 @@ in pipe (entries // include) [
     };
   }))
   (flakes: { inherit flakes version; })
-  (builtins.toJSON)
+  (toJSON)
+  # use writeText because it generates a derivation;
   (writeText "registry.json")
 ]
