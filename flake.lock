@@ -35,14 +35,14 @@
     },
     "flake-parts": {
       "inputs": {
-        "nixpkgs-lib": ["nix", "nixpkgs"]
+        "nixpkgs-lib": ["nixpkgs"]
       },
       "locked": {
-        "lastModified": 1712014858,
-        "narHash": "sha256-sB4SWl2lX95bExY2gMFG5HIzvva5AVMJd4Igm+GpZNw=",
+        "lastModified": 1719877454,
+        "narHash": "sha256-g5N1yyOSsPNiOlFfkuI/wcUjmtah+nxdImJqrSATjOU=",
         "owner": "hercules-ci",
         "repo": "flake-parts",
-        "rev": "9126214d0a59633752a136528f5f3b9aa8565b7d",
+        "rev": "4e3583423212f9303aa1a6337f8dffb415920e4f",
         "type": "github"
       },
       "original": {
@@ -119,23 +119,23 @@
     "nix": {
       "inputs": {
         "flake-compat": ["flake-compat"],
-        "flake-parts": "flake-parts",
+        "flake-parts": ["flake-parts"],
         "libgit2": "libgit2",
         "nixpkgs": ["nixpkgs"],
         "nixpkgs-regression": "nixpkgs-regression",
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1713862883,
-        "narHash": "sha256-Ugcc+lSq8nJP+mddMlGFnoG4Ix1lRFHWOal3299bqR8=",
+        "lastModified": 1718030842,
+        "narHash": "sha256-cRCwRDxR8rEQQEvGjIH8g0krJd4ZFJrdgmPXkv65S/Y=",
         "owner": "nixos",
         "repo": "nix",
-        "rev": "5fd799cfa70d22a625bc706a599b6244f654718d",
+        "rev": "ba36959311e09bd798f7029c41e108d9d77c9ac0",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "2.22.0",
+        "ref": "2.23.0",
         "repo": "nix",
         "type": "github"
       }
@@ -213,13 +213,12 @@
       "inputs": {
         "disko": "disko",
         "flake-compat": "flake-compat",
-        "flake-parts": ["nix", "flake-parts"],
+        "flake-parts": "flake-parts",
         "home-manager": "home-manager",
         "impermanence": "impermanence",
         "nix": "nix",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-regression": ["nix", "nixpkgs-regression"],
         "sops-nix": "sops-nix",
         "systems": "systems",
         "treefmt-nix": "treefmt-nix"
