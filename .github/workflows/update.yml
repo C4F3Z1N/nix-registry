@@ -21,8 +21,7 @@ jobs:
           git config --local push.autoSetupRemote true
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-      - id: update
-        name: Update and push
+      - name: Update and push
         run: |
           git switch -c "update/$(date '+%Y-%m-%d')"
           nix flake update --commit-lock-file
