@@ -1,0 +1,21 @@
+name: Build after an update
+
+on:
+  push:
+    branches:
+      - update/*
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@v27
+        with:
+          extra_nix_config: |
+            experimental-features = flakes nix-command
+            flake-registry = https://github.com/c4f3z1n/nix-registry/releases/latest/download/registry.json
+            nix-path = nixpkgs=flake:nixpkgs
+      - id: build
+        run: nix build --no-link --print-out-paths
+
