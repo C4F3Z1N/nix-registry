@@ -9,24 +9,22 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v27
         with:
           extra_nix_config: |
             experimental-features = flakes nix-command
             flake-registry = https://github.com/c4f3z1n/nix-registry/releases/latest/download/registry.json
             nix-path = nixpkgs=flake:nixpkgs
-      - name: Setup git
+      - uses: actions/checkout@v4
+      - name: git config
         run: |
-          git config --local push.autoSetupRemote true
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-      - id: update
-        name: Update and push
+      - name: update and push
         run: |
           git switch -c "update/$(date '+%Y-%m-%d')"
           nix flake update --commit-lock-file
           nix fmt flake.lock
           git add flake.lock
           git commit --amend --no-edit
-          git push
+          git push --set-upstream origin "$(git rev-parse --abbrev-ref HEAD)"
