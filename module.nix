@@ -36,8 +36,11 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
-    nix.settings.flake-registry = cfg.package
+  config.nix = mkIf cfg.enable {
+    registry.nix-registry.to =
+      builtins.parseFlakeRef "github:c4f3z1n/nix-registry";
+
+    settings.flake-registry = cfg.package
       // optionalAttrs (cfg.package != opt.package.default) {
         inherit (cfg) override;
       };

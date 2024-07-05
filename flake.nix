@@ -7,7 +7,7 @@
     nix.url = "github:nixos/nix/2.23.0";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
 
-    # tracking main, master, latest, etc.;
+    # tracking main, master, latest, HEAD, etc.;
     disko.url = "github:nix-community/disko";
     flake-compat.url = "github:edolstra/flake-compat";
     flake-parts.url = "github:hercules-ci/flake-parts";
