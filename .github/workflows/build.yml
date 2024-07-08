@@ -18,5 +18,4 @@ jobs:
             nix-path = nixpkgs=flake:nixpkgs
       - uses: actions/checkout@v4
       - id: build
-        run: nix build --no-link --print-out-paths
-
+        run: cat "$(nix build --no-link --print-out-paths)"

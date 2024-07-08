@@ -2,7 +2,7 @@ name: Update flake.lock
 
 on:
   schedule:
-    - cron: "0 0 * * 0,3" # every Sunday and Wednesday at 00:00;
+    - cron: "0 0 * * SUN,WED" # every Sunday and Wednesday at 00:00;
   workflow_dispatch:
 
 jobs:
@@ -18,13 +18,13 @@ jobs:
       - uses: actions/checkout@v4
       - name: git config
         run: |
-          # git config --local push.autoSetupRemote true
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
       - name: update and push
         run: |
+          git switch -c "$(date '+%Y-%m-%d')"
           nix flake update --commit-lock-file
           nix fmt flake.lock
           git add flake.lock
           git commit --amend --no-edit
-          git push origin "HEAD:refs/heads/$(date '+%Y-%m-%d')"
+          git push --set-upstream origin "$(git symbolic-ref --short HEAD)"
